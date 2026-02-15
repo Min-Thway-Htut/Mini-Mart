@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,11 +19,26 @@ const ProductsPage: React.FC = () => {
     navigate(`/products/${product.id}`);
   };
 
+const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen p-8 md:p-20 bg-gray-100">
       <h2 className="text-3xl font-bold mb-8 text-center">Our Products</h2>
+
+    <div className="flex justify-center mb-8">
+          <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full md:w-1/2 p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
+        />
+    </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div
             key={product.id}
             className="bg-white p-6 rounded shadow cursor-pointer hover:shadow-lg transition"
@@ -41,6 +57,12 @@ const ProductsPage: React.FC = () => {
             <p className="text-gray-700">{product.category}</p>
           </div>
         ))}
+
+          {filteredProducts.length === 0 && (
+          <p className="col-span-3 text-center text-gray-500">
+            No products found.
+          </p>
+        )}
       </div>
     </div>
   );
