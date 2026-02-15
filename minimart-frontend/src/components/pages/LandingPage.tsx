@@ -1,8 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const LandingPage: React.FC = () => {
+
+  const navigate = useNavigate();
+
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -16,7 +21,9 @@ const LandingPage: React.FC = () => {
             Shop from our mini-mart and get the best deals on food, drinks, and
             snacks
           </p>
-          <button className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
+          <button 
+           onClick={() => navigate("/products")} 
+          className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
             Shop Now
           </button>
         </div>
