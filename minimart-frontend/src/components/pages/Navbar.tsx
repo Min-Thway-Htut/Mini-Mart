@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import { useCart } from "../../cartContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { cart } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-green-600 text-white p-4 relative">
@@ -46,6 +51,18 @@ const Navbar: React.FC = () => {
           <a href="#contact" className="hover:underline">
             Contact
           </a>
+
+          <button
+  onClick={() => navigate("/cart")}
+  className="relative"
+>
+  🛒
+  {totalItems > 0 && (
+    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-2 rounded-full">
+      {totalItems}
+    </span>
+  )}
+</button>
         </div>
       </div>
 

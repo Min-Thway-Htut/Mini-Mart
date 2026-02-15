@@ -4,6 +4,7 @@ import Navbar from './components/pages/Navbar';
 import Footer from './components/pages/Footer';
 import ProductsPage from './components/pages/ProductsPage';
 import ProductDetailsPage from './components/pages/ProductDetailsPage';
+import CartPage from './components/pages/CartPage';
 
 function App() {
   return (
@@ -23,6 +24,14 @@ function App() {
              <ProductDetailsPage />
              <Footer />
             </>
+            } />
+
+            <Route path="/cart" element={
+                <>
+                <Navbar />
+                <CartPage />
+                <Footer />
+                </>
             } />
       </Routes>
     </Router>

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import type { Product } from "../types";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../cartContext";
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("All"); // default = All
+  const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const navigate = useNavigate();
+  const { cart, addToCart, removeFromCart } = useCart();
 
   useEffect(() => {
     axios
@@ -31,9 +33,15 @@ const ProductsPage: React.FC = () => {
 
   const categories = ["All", "Food", "Drinks", "Snacks"];
 
+  const getQuantity = (productId: number) => {
+    const item = cart.find((i) => i.id === productId);
+    return item ? item.quantity : 0;
+  };
+
   return (
     <div className="min-h-screen p-8 md:p-20 bg-gray-100">
       <h2 className="text-3xl font-bold mb-6 text-center">Our Products</h2>
+
       <div className="flex flex-col items-center mb-4 md:mb-6">
         <input
           type="text"
@@ -42,7 +50,6 @@ const ProductsPage: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:w-1/2 p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
         />
-
         <div className="flex flex-wrap justify-center mt-4 gap-2">
           {categories.map((category) => (
             <button
@@ -64,20 +71,61 @@ const ProductsPage: React.FC = () => {
         {filteredProducts.map((product) => (
           <div
             key={product.id}
-            className="bg-white p-6 rounded shadow cursor-pointer hover:shadow-lg transition"
-            onClick={() => handleClick(product)}
+            className="bg-white p-6 rounded shadow hover:shadow-lg transition"
           >
             <img
               src={product.image}
               alt={product.name}
-              className="mx-auto mb-4 rounded"
-              style={{width: "150px", height: "150px"}}
+              className="mx-auto mb-4 rounded cursor-pointer"
+              style={{ width: "150px", height: "150px" }}
+              onClick={() => handleClick(product)}
             />
-            <h3 className="font-bold text-xl mb-2">{product.name}</h3>
+
+            <h3
+              className="font-bold text-xl mb-2 cursor-pointer"
+              onClick={() => handleClick(product)}
+            >
+              {product.name}
+            </h3>
+
             <p className="text-green-600 font-semibold mb-2">
               ${product.price.toFixed(2)}
             </p>
-            <p className="text-gray-700">{product.category}</p>
+            <p className="text-gray-700 mb-4">{product.category}</p>
+
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeFromCart(product.id);
+                }}
+                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
+              >
+                -
+              </button>
+              <span className="px-4 py-1 border rounded">
+                {getQuantity(product.id)}
+              </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart(product);
+                }}
+                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
+              >
+                +
+              </button>
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                addToCart(product);
+              }}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full"
+            >
+              Add to Cart
+            </button>
           </div>
         ))}
 
