@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { products } from "../data/products"; // your products array
+import axios from "axios";
 import type { Product } from "../types";
 
 const ProductDetailsPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // get product id from URL
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [product, setProduct] = useState<Product | null>(null);
 
-  // find product by id
-  const product: Product | undefined = products.find(
-    (p) => p.id === Number(id)
-  );
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/api/products/${id}/`)
+      .then((res) => setProduct(res.data))
+      .catch((err) => console.error(err));
+  }, [id]);
 
   if (!product) {
-    return <p className="p-8 text-center">Product not found.</p>;
+    return <p className="p-8 text-center">Loading product...</p>;
   }
 
   return (
@@ -29,7 +32,7 @@ const ProductDetailsPage: React.FC = () => {
           src={product.image}
           alt={product.name}
           className="rounded w-full md:w-1/2"
-           style={{width: "150px", height: "150px"}}
+          style={{width: "150px", height: "150px"}}
         />
         <div className="md:w-1/2">
           <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
