@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import type { Product } from '../types';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import type { Product } from "../types";
+import { useNavigate } from "react-router-dom";
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("All"); // default = All
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/api/products/')
+      .get("http://127.0.0.1:8000/api/products/")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -19,23 +20,45 @@ const ProductsPage: React.FC = () => {
     navigate(`/products/${product.id}`);
   };
 
-const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const matchesName = product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "All" || product.category === categoryFilter;
+    return matchesName && matchesCategory;
+  });
+
+  const categories = ["All", "Food", "Drinks", "Snacks"];
 
   return (
     <div className="min-h-screen p-8 md:p-20 bg-gray-100">
-      <h2 className="text-3xl font-bold mb-8 text-center">Our Products</h2>
-
-    <div className="flex justify-center mb-8">
-          <input
+      <h2 className="text-3xl font-bold mb-6 text-center">Our Products</h2>
+      <div className="flex flex-col items-center mb-4 md:mb-6">
+        <input
           type="text"
           placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:w-1/2 p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
         />
-    </div>
+
+        <div className="flex flex-wrap justify-center mt-4 gap-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setCategoryFilter(category)}
+              className={`px-4 py-2 rounded border transition ${
+                categoryFilter === category
+                  ? "bg-green-600 text-white border-green-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-green-500 hover:text-white"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {filteredProducts.map((product) => (
@@ -58,7 +81,7 @@ const filteredProducts = products.filter((product) =>
           </div>
         ))}
 
-          {filteredProducts.length === 0 && (
+        {filteredProducts.length === 0 && (
           <p className="col-span-3 text-center text-gray-500">
             No products found.
           </p>
