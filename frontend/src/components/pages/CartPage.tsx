@@ -48,7 +48,7 @@ const CartPage: React.FC = () => {
             <div className="flex items-center space-x-2 mb-4">
               <button
                 onClick={() => removeFromCart(item.id)}
-                className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
               >
                 -
               </button>
