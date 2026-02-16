@@ -3,6 +3,7 @@ import axios from "axios";
 import type { Product } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../cartContext";
+import { useAuth } from "../../authContext";
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -10,6 +11,7 @@ const ProductsPage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const navigate = useNavigate();
   const { cart, addToCart, decrease } = useCart();
+  const { token } = useAuth();
 
   useEffect(() => {
     axios
@@ -20,6 +22,24 @@ const ProductsPage: React.FC = () => {
 
   const handleClick = (product: Product) => {
     navigate(`/products/${product.id}`);
+  };
+
+   const handleAddToCart = (productId: number) => {
+    if (!token) {
+      alert("Please log in or register to add items to the cart.");
+      navigate("/login");
+      return;
+    }
+    addToCart(productId);
+  };
+
+  const handleDecrease = (productId: number) => {
+    if (!token) {
+      alert("Please log in or register to modify your cart.");
+      navigate("/login");
+      return;
+    }
+    decrease(productId);
   };
 
   const filteredProducts = products.filter((product) => {
@@ -97,7 +117,7 @@ const ProductsPage: React.FC = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  decrease(product.id);
+                  handleDecrease(product.id);
                 }}
                 className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
               >
@@ -109,7 +129,7 @@ const ProductsPage: React.FC = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  addToCart(product.id);
+                  handleAddToCart(product.id);
                 }}
                 className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
               >
@@ -120,7 +140,7 @@ const ProductsPage: React.FC = () => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(product.id);
+                handleAddToCart(product.id);
               }}
               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full"
             >
