@@ -1,57 +1,72 @@
-import React,  { createContext, useContext, useState, type ReactNode } from "react";
-import type { Product } from "./components/types";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "./authContext";
 
-type CartItem = Product & { quantity: number };
+interface CartItem {
+  id: number;
+  product: number;
+  product_name: string;
+  product_price: number;
+  product_image: string;
+  quantity: number;
+}
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: number) => void;
+  addToCart: (productId: number) => void;
+  decrease: (productId: number) => void;
+  remove: (productId: number) => void;
+  fetchCart: () => void;
   clearCart: () => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextType | null>(null);
 
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { token } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
+  const authHeader = {
+    headers: { Authorization: `Bearer ${token}` },
   };
 
-const removeFromCart = (productId: number) => {
-  setCart((prev) =>
-    prev
-      .map((item) =>
-        item.id === productId
-          ? { ...item, quantity: item.quantity - 1 } 
-          : item
-      )
-      .filter((item) => item.quantity > 0)
-  );
+  const fetchCart = () => {
+    if (!token) return;
+    axios.get("http://127.0.0.1:8000/api/cart/", authHeader)
+      .then(res => setCart(res.data))
+      .catch(() => setCart([]));
+  };
+
+  const addToCart = (productId: number) => {
+    axios.post("http://127.0.0.1:8000/api/cart/add/", { product_id: productId }, authHeader)
+      .then(fetchCart);
+  };
+
+  const decrease = (productId: number) => {
+    axios.post("http://127.0.0.1:8000/api/cart/decrease/", { product_id: productId }, authHeader)
+      .then(fetchCart);
+  };
+
+  const remove = (productId: number) => {
+    axios.delete(`http://127.0.0.1:8000/api/cart/remove/${productId}/`, authHeader)
+      .then(fetchCart);
+  };
+
+  const clearCart = () => {
+  axios.delete("http://127.0.0.1:8000/api/cart/clear/", authHeader)
+    .then(fetchCart)
+    .catch(err => console.error("Failed to clear cart:", err));
 };
 
-  const clearCart = () => setCart([]);
+  useEffect(() => {
+    fetchCart();
+  }, [token]);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, decrease, remove, fetchCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within a CartProvider");
-  return context;
-};
+export const useCart = () => useContext(CartContext)!;

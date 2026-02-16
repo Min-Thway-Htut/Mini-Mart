@@ -3,11 +3,11 @@ import { useCart } from "../../cartContext";
 import { useNavigate } from "react-router-dom";
 
 const CartPage: React.FC = () => {
-  const { cart, addToCart, removeFromCart, clearCart } = useCart();
+  const { cart, addToCart, decrease, remove, clearCart } = useCart();
   const navigate = useNavigate();
 
   const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.product_price * item.quantity,
     0
   );
 
@@ -36,25 +36,29 @@ const CartPage: React.FC = () => {
             className="bg-white p-6 rounded shadow flex flex-col items-center"
           >
             <img
-              src={item.image}
-              alt={item.name}
+              src={`http://127.0.0.1:8000${item.product_image}`}
+              alt={item.product_name}
               className="w-32 h-32 object-cover mb-4 rounded"
             />
-            <h3 className="font-bold text-xl mb-2">{item.name}</h3>
+            <h3 className="font-bold text-xl mb-2">{item.product_name}</h3>
             <p className="text-green-600 font-semibold mb-2">
-              ${item.price.toFixed(2)}
+                ${Number(item.product_price).toFixed(2)}
             </p>
 
             <div className="flex items-center space-x-2 mb-4">
               <button
-                onClick={() => removeFromCart(item.id)}
+                onClick={() => decrease(item.product)}
                 className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
               >
                 -
               </button>
-              <span className="px-3 py-1 border rounded">{item.quantity}</span>
+
+              <span className="px-3 py-1 border rounded">
+                {item.quantity}
+              </span>
+
               <button
-                onClick={() => addToCart(item)}
+                onClick={() => addToCart(item.product)}
                 className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
               >
                 +
@@ -62,7 +66,7 @@ const CartPage: React.FC = () => {
             </div>
 
             <button
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => remove(item.product)}
               className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition"
             >
               Remove
@@ -72,7 +76,10 @@ const CartPage: React.FC = () => {
       </div>
 
       <div className="mt-8 flex flex-col md:flex-row justify-between items-center">
-        <h3 className="text-2xl font-bold">Total: ${totalPrice.toFixed(2)}</h3>
+        <h3 className="text-2xl font-bold">
+          Total: ${totalPrice.toFixed(2)}
+        </h3>
+
         <div className="mt-4 md:mt-0 flex space-x-4">
           <button
             onClick={() => clearCart()}
@@ -80,6 +87,7 @@ const CartPage: React.FC = () => {
           >
             Clear Cart
           </button>
+
           <button
             onClick={() => alert("Proceed to checkout")}
             className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition"

@@ -9,7 +9,7 @@ const ProductsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const navigate = useNavigate();
-  const { cart, addToCart, removeFromCart } = useCart();
+  const { cart, addToCart, decrease } = useCart();
 
   useEffect(() => {
     axios
@@ -34,7 +34,7 @@ const ProductsPage: React.FC = () => {
   const categories = ["All", "Food", "Drinks", "Snacks"];
 
   const getQuantity = (productId: number) => {
-    const item = cart.find((i) => i.id === productId);
+    const item = cart.find((i) => i.product === productId);
     return item ? item.quantity : 0;
   };
 
@@ -97,7 +97,7 @@ const ProductsPage: React.FC = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeFromCart(product.id);
+                  decrease(product.id);
                 }}
                 className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
               >
@@ -109,7 +109,7 @@ const ProductsPage: React.FC = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  addToCart(product);
+                  addToCart(product.id);
                 }}
                 className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
               >
@@ -120,7 +120,7 @@ const ProductsPage: React.FC = () => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(product);
+                addToCart(product.id);
               }}
               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full"
             >
