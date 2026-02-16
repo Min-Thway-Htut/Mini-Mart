@@ -8,6 +8,7 @@ import CartPage from "./components/pages/CartPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./components/pages/LoginPage";
 import RegisterPage from "./components/pages/RegisterPage";
+import WelcomePage from "./components/pages/WelcomPage";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -24,7 +25,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Public */}
-        <Route path="/" element={<LandingPage />} />
+
+        <Route path="/" element={<WelcomePage />} />
+
+        <Route path="/landingPage" element={<LandingPage />} />
 
         <Route path="/login" element={
           <Layout>
