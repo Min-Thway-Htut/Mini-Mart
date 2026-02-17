@@ -1,6 +1,5 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 
 interface AuthContextType {
   token: string | null;
