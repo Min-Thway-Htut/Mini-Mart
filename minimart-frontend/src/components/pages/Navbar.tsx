@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
           {/* Cart */}
           <button onClick={() => navigate("/cart")} className="relative">
             <img
-              src="/src/images/cart-icon.png"
+              src="/images/cart-icon.png"
               alt="Cart"
               className="w-6 h-6"
             />

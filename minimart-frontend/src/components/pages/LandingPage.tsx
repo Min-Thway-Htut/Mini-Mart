@@ -29,7 +29,7 @@ const LandingPage: React.FC = () => {
         </div>
         <div className="md:w-1/2 mt-8 md:mt-0">
           <img
-            src="src/images/logo.png"
+            src="/images/logo.png"
             alt="MiniMart"
             style={{ width: "250px", height: "250px" }}
           />
@@ -41,7 +41,7 @@ const LandingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded shadow text-center">
             <img
-              src="src/images/food.png"
+              src="/images/food.png"
               alt="Food Icon"
               className="mx-auto mb-4"
               style={{ width: "130px", height: "130px" }}
@@ -51,7 +51,7 @@ const LandingPage: React.FC = () => {
           </div>
           <div className="bg-white p-6 rounded shadow text-center">
             <img
-              src="src/images/drink.png"
+              src="/images/drink.png"
               alt="Drink Icon"
               className="mx-auto mb-4"
               style={{ width: "130px", height: "130px" }}
@@ -61,7 +61,7 @@ const LandingPage: React.FC = () => {
           </div>
           <div className="bg-white p-6 rounded shadow text-center">
             <img
-              src="src/images/snack.png"
+              src="/images/snack.png"
               alt="Snack Icon"
               className="mx-auto mb-4"
               style={{ width: "130px", height: "130px" }}
