@@ -32,28 +32,28 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchCart = () => {
     if (!token) return;
-    axios.get("http://127.0.0.1:8000/api/cart/", authHeader)
+    axios.get("https://backend-v80n.onrender.com/api/cart/", authHeader)
       .then(res => setCart(res.data))
       .catch(() => setCart([]));
   };
 
   const addToCart = (productId: number) => {
-    axios.post("http://127.0.0.1:8000/api/cart/add/", { product_id: productId }, authHeader)
+    axios.post("https://backend-v80n.onrender.com/api/cart/add/", { product_id: productId }, authHeader)
       .then(fetchCart);
   };
 
   const decrease = (productId: number) => {
-    axios.post("http://127.0.0.1:8000/api/cart/decrease/", { product_id: productId }, authHeader)
+    axios.post("https://backend-v80n.onrender.com/api/cart/decrease/", { product_id: productId }, authHeader)
       .then(fetchCart);
   };
 
   const remove = (productId: number) => {
-    axios.delete(`http://127.0.0.1:8000/api/cart/remove/${productId}/`, authHeader)
+    axios.delete(`https://backend-v80n.onrender.com/api/cart/remove/${productId}/`, authHeader)
       .then(fetchCart);
   };
 
   const clearCart = () => {
-  axios.delete("http://127.0.0.1:8000/api/cart/clear/", authHeader)
+  axios.delete("https://backend-v80n.onrender.com/api/cart/clear/", authHeader)
     .then(fetchCart)
     .catch(err => console.error("Failed to clear cart:", err));
 };

@@ -14,7 +14,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://127.0.0.1:8000/api/register/", {
+      await axios.post("https://backend-v80n.onrender.com/api/register/", {
         username,
         email,
         password,

@@ -10,7 +10,7 @@ const ProductDetailsPage: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/products/${id}/`)
+      .get(`https://backend-v80n.onrender.com/api/products/${id}/`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.error(err));
   }, [id]);

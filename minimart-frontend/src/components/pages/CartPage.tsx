@@ -36,7 +36,7 @@ const CartPage: React.FC = () => {
             className="bg-white p-6 rounded shadow flex flex-col items-center"
           >
             <img
-              src={`http://127.0.0.1:8000${item.product_image}`}
+              src={`https://backend-v80n.onrender.com${item.product_image}`}
               alt={item.product_name}
               className="w-32 h-32 object-cover mb-4 rounded"
             />

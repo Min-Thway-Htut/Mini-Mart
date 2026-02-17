@@ -13,7 +13,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("access"));
 
   const login = async (username: string, password: string) => {
-    const res = await axios.post("http://127.0.0.1:8000/api/token/", { username, password });
+    const res = await axios.post("https://backend-v80n.onrender.com/api/token/", { username, password });
     setToken(res.data.access);
     localStorage.setItem("access", res.data.access);
     localStorage.setItem("refresh", res.data.refresh);
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     const refresh = localStorage.getItem("refresh");
     if (!refresh) return logout();
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/token/refresh/", { refresh });
+      const res = await axios.post("https://backend-v80n.onrender.com/api/token/refresh/", { refresh });
       setToken(res.data.access);
       localStorage.setItem("access", res.data.access);
     } catch {
