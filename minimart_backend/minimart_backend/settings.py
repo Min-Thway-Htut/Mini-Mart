@@ -117,6 +117,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5176",
+    "https://mini-mart-16ig.onrender.com"
 ]
 
 SIMPLE_JWT = {
